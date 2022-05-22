@@ -11,7 +11,8 @@ const onConnect = (ws, socket) => {
 
 	id = count++
 	socket.on('message', message => {
-		ws.clients.forEach(client => client.send({id, message}))
+		message = message.toString()
+		ws.clients.forEach(client => client.send(JSON.stringify({id, message})))
 	})
 }
 
