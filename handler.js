@@ -22,6 +22,12 @@ const onConnect = (ws, socket) => {
 				if (client === socket) client.send(JSON.stringify({newId, message}))
 			})
 
+			message = `User ${newId} just entered!`
+
+			ws.clients.forEach(client => {
+				if (client !== socket) client.send(JSON.stringify({newId, message}))
+			})
+
 			return
 		}
 
