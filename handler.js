@@ -1,4 +1,4 @@
-const WebSocket = require('ws');
+const WebSocket = require('ws')
 let count = 0
 /**
  * @param {WebSocket.Server} ws
@@ -9,12 +9,26 @@ const onConnect = (ws, socket) => {
 	console.log('Alguém acaba de conectar')
 	socket.send('Ta conectado meu querido')
 
-	id = count++
+	const id = count++
+
 	socket.on('message', message => {
 		message = message.toString()
-		ws.clients.forEach(client => client.send(JSON.stringify({id, message})))
+
+		if (message === '') {
+			const newId = id
+			message = `Welcome! You are user ${newId}.`
+
+			ws.clients.forEach(client => {
+				if (client === socket) client.send(JSON.stringify({newId, message}))
+			})
+
+			return
+		}
+
+		ws.clients.forEach(client => {
+			if (client !== socket) client.send(message)
+		})
 	})
 }
-
 
 module.exports = {onConnect}
